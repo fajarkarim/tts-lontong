@@ -1,22 +1,16 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
-    <h2>Essential Links</h2>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank">Forum</a></li>
-      <li><a href="https://gitter.im/vuejs/vue" target="_blank">Gitter Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank">Twitter</a></li>
-      <br>
-      <li><a href="http://vuejs-templates.github.io/webpack/" target="_blank">Docs for This Template</a></li>
-    </ul>
-    <h2>Ecosystem</h2>
-    <ul>
-      <li><a href="http://router.vuejs.org/" target="_blank">vue-router</a></li>
-      <li><a href="http://vuex.vuejs.org/" target="_blank">vuex</a></li>
-      <li><a href="http://vue-loader.vuejs.org/" target="_blank">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a></li>
-    </ul>
+    <table>
+      <tr v-for="i in 5">
+        <td v-for="j in 5">
+          <input v-if="crossword[i-1][j-1] == ' '" type="text" name="" :value="crossword[i-1][j-1]" disabled>
+          <input v-else type="text" name="" v-model="crossword[i-1][j-1]" @keyup="updateBoard(i-1, j-1, value)">
+        </td>
+      </tr>
+    </table>
+    <input type="text" name="" v-model="halo">
+    <input type="text" @>
+    <h2>{{ halo }}</h2>
   </div>
 </template>
 
@@ -25,7 +19,28 @@ export default {
   name: 'hello',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      msg: 'Welcome to Your Vue.js App',
+      halo: 'coba',
+      updatedValue: '',
+      dict: [
+        [' ', 'M', 'A', 'N', 'A'],
+        [' ', 'A', ' ', ' ', ' '],
+        ['A', 'K', 'U', ' ', ' '],
+        [' ', 'A', ' ', ' ', ' '],
+        [' ', 'N', 'A', 'S', 'I']
+      ],
+      crossword: [
+        [' ', 'M', '', 'N', 'A'],
+        [' ', '', ' ', ' ', ' '],
+        ['A', '', 'U', ' ', ' '],
+        [' ', '', ' ', ' ', ' '],
+        [' ', 'N', 'A', '', '']
+      ]
+    }
+  },
+  methods: {
+    updateBoard: function (i, j, val) {
+      console.log(`${i}, ${j}, ${val}`)
     }
   }
 }
@@ -33,21 +48,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1, h2 {
-  font-weight: normal;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-
-a {
-  color: #42b983;
+input {
+  text-align: center;
+  width: 25px;
 }
 </style>
