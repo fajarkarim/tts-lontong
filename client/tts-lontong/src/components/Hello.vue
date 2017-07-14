@@ -19,14 +19,18 @@ export default {
     return {
       msg: 'Welcome to Your Vue.js App',
       halo: 'coba',
+      correctHAnswer: '',
+      correctVAnswer: '',
       updatedValue: '',
-      hAnswer: [[2, 0], [4, 1]],
+      score: 0,
+      currentUser: '',
+      hAnswer: [[0, 1], [2, 0], [4, 1]],
       vAnswer: [[0, 1]],
-      answer: ['MANA', 'MAKAN', 'AKU', 'NASI'],
+      answer: ['MANA', 'MAKAN', 'AKUN', 'NASI'],
       crossword: [
-        [' ', 'M', 'A', 'N', 'A'],
+        [' ', 'M', '', 'N', 'A'],
         [' ', '', ' ', ' ', ' '],
-        ['A', '', 'U', ' ', ' '],
+        ['A', '', '', 'N', ' '],
         [' ', '', ' ', ' ', ' '],
         [' ', 'N', 'A', '', '']
       ]
@@ -37,34 +41,71 @@ export default {
       console.log(`${i}, ${j}, ${val}`)
     },
     checkAll: function () {
+      let checked
       for (let i = 0; i < this.hAnswer.length; i++) {
-        console.log(this.checkHorizontal(this.hAnswer[i]))
+        checked = this.checkHorizontal(this.hAnswer[i])
+        if (checked.status) {
+          this.correctHAnswer = this.hAnswer.splice(i, 1)
+          this.score += 100
+          break
+        } else {
+          this.correctHAnswer = ''
+        }
       }
       for (let i = 0; i < this.vAnswer.length; i++) {
-        console.log(this.checkVertikal(this.vAnswer[i]))
+        checked = this.checkVertikal(this.vAnswer[i])
+        if (checked.status) {
+          this.correctVAnswer = this.vAnswer.splice(i, 1)
+          this.score += 100
+          break
+        } else {
+          this.correctVAnswer = ''
+        }
+      }
+      if (this.correctHAnswer) {
+        console.log(this.correctHAnswer)
+      } else if (this.correctVAnswer) {
+        console.log(this.correctVAnswer)
+      } else {
+        console.log(`salaaah`)
+      }
+      if (this.hAnswer.length === 0 && this.vAnswer.length === 0) {
+        console.log(`YOU WIIN`)
       }
     },
     checkHorizontal: function (pos) {
       let r = pos[0]
+      let result = {}
       let word = this.crossword[r].join('').trim()
       if (this.answer.includes(word)) {
-        return ['horizontal', true, word]
+        result.type = 'horizontal'
+        result.status = true
+        result.word = word
+        return result
       } else {
-        return ['horizontal', false, word]
+        result.status = false
+        result.word = word
+        return result
       }
     },
     checkVertikal: function (pos) {
       let c = pos[1]
       let hWord = []
       let word
+      let result = {}
       for (let i = 0; i < this.crossword.length; i++) {
         hWord.push(this.crossword[i][c])
       }
       word = hWord.join('').trim()
       if (this.answer.includes(word)) {
-        return ['vertikal', true, word]
+        result.type = 'vartikal'
+        result.status = true
+        result.word = word
+        return result
       } else {
-        return ['vertikal', false, word]
+        result.status = false
+        result.word = word
+        return result
       }
     }
   }
