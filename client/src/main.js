@@ -4,11 +4,9 @@ import Vue from 'vue'
 import VueFire from 'vuefire'
 import App from './App'
 import router from './router'
-import dotenv from 'dotenv'
 
 Vue.use(VueFire)
 Vue.config.productionTip = false
-dotenv.config()
 
 /* eslint-disable no-new */
 new Vue({

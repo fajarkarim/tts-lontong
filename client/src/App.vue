@@ -1,26 +1,18 @@
 <template>
   <div id="app">
-    <navbar></navbar>
+    <user-sidebar></user-sidebar>
   </div>
 </template>
 
 <script>
-import Navbar from '@/components/Navbar'
-import Firebase from 'firebase'
-export default {
-  name: 'app'
-}
-var config = {
-    apiKey: "...",
-    authDomain: "...",
-    databaseURL: "...",
-    storageBucket: "...",
-    messagingSenderId: "..."
-  };
+import UserSidebar from '@/components/UserSidebar'
 
-var app = Firebase.initializeApp(config)
-var db = app.database()
-// var booksRef = db.ref('books')
+export default {
+  name: 'app',
+  components: {
+    UserSidebar
+  }
+}
 </script>
 
 <style>
