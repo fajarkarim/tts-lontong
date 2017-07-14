@@ -1,12 +1,25 @@
 <template>
   <div class="hello">
+    <div id="login">
+      <input id="login" type="text" v-model="nameLogin">
+      <button type="button" name="buttonLogin" @click='loginUser'>Login</button>
+      <div v-if='isLogin == true'>
+        <button type="button" @click='logoutUser'>Logout</button>
+      </div>
+      <tr v-for='user in currentUser'>
+        <td>{{user.name}}</td>
+        <td>{{user.userScore}}</td>
+      </tr>
+      {{errorMsg}}
+      <button type="button" name="button" @click='testScore'>Test Score</button>
+  </div>
     <div class="row">
       <div class="col-md-4 col-md-offset-4">
         <table class="board">
           <tr v-for="i in 5">
             <td v-for="j in 5">
-              <input v-if="crossword[i-1][j-1] == ' '" type="text" name="" :value="crossword[i-1][j-1]" maxlength="1" size="4" disabled>
-              <input v-else type="text" name="" maxlength="1" size="10" v-model="crossword[i-1][j-1]">
+              <input class="kotak" v-if="crossword[i-1][j-1] == ' '" type="text" name="" :value="crossword[i-1][j-1]" maxlength="1" size="4" disabled>
+              <input class="kotak" v-else type="text" name="" maxlength="1" size="10" v-model="crossword[i-1][j-1]">
             </td>
           </tr>
         </table>
@@ -28,10 +41,18 @@
 </template>
 
 <script>
+import {firebaseApp} from '@/firebase'
+
 export default {
   name: 'hello',
   data () {
     return {
+      nameLogin: '',
+      userScore: '',
+      userKey: '',
+      errorMsg: '',
+      isLogin: false,
+      currentUser: null,
       msg: 'Welcome to Your Vue.js App',
       halo: 'coba',
       currentQuestion: '',
@@ -45,23 +66,39 @@ export default {
       correctVAnswer: '',
       updatedValue: '',
       score: 0,
-      currentUser: '',
       hAnswer: [[0, 1], [2, 0], [4, 1]],
       vAnswer: [[0, 1]],
-      answer: ['MANA', 'MAKAN', 'AKUN', 'NASI'],
-      crossword: [
-        [' ', 'M', '', 'N', 'A'],
-        [' ', '', ' ', ' ', ' '],
-        ['A', '', '', 'N', ' '],
-        [' ', '', ' ', ' ', ' '],
-        [' ', 'N', 'A', '', '']
-      ]
+      answer: ['MANA', 'MAKAN', 'AKUN', 'NASI']
+      // crossword: []
     }
   },
   created () {
     this.getQuestion()
   },
   methods: {
+    loginUser: function () {
+      var self = this
+      self.userKey = firebaseApp.database().ref().child('currentuser').push().key
+      var userData = {
+        name: self.nameLogin,
+        userScore: 5
+      }
+      var updates = {}
+      updates['currentuser/' + self.userKey] = userData
+      firebaseApp.database().ref().update(updates)
+      self.isLogin = true
+    },
+    logoutUser: function () {
+      var self = this
+      console.log('Key' + self.userKey)
+      firebaseApp.database().ref().child('currentuser').child(self.userKey).remove()
+      self.isLogin = false
+      self.userKey = ''
+    },
+    testScore: function () {
+      var self = this
+      firebaseApp.database().ref('currentuser/' + self.userKey + '/' + 'userScore').set(self.userScore[self.userKey].userScore + 5)
+    },
     updateBoard: function (i, j, val) {
       console.log(`${i}, ${j}, ${val}`)
     },
@@ -140,13 +177,40 @@ export default {
       this.listQuestions.shift()
       this.currentQuestion = this.listQuestions[0]
     }
+  },
+  firebase: {
+    currentUser: {
+      source: firebaseApp.database().ref().child('currentuser')
+    },
+    userScore: {
+      source: firebaseApp.database().ref().child('currentuser'),
+      asObject: true
+    },
+    crossword: {
+      source: firebaseApp.database().ref().child('cross')
+    }
+  },
+  watch: {
+    crossword (changedBoard) {
+      firebaseApp.database().ref('board/').set(changedBoard)
+    }
+  },
+  mounted () {
+    this.crossword = [
+      [' ', 'M', '', 'N', 'A'],
+      [' ', '', ' ', ' ', ' '],
+      ['A', '', '', 'N', ' '],
+      [' ', '', ' ', ' ', ' '],
+      [' ', 'N', 'A', '', '']
+    ]
   }
+
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-input {
+.kotak {
   text-align: center;
   width: 50px;
   height: 50px;
@@ -177,5 +241,9 @@ table {
 #choice {
   padding: 0,5px;
   background-color: black;
+}
+#login {
+  background-color: black;
+  color: white;
 }
 </style>
