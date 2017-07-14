@@ -7,7 +7,7 @@
     </div>
     <tr v-for='user in currentUser'>
       <td>{{user.name}}</td>
-      <td>{{user.score}}</td>
+      <td>{{user.userScore}}</td>
     </tr>
     {{errorMsg}}
     <button type="button" name="button" @click='testScore'>Test Score</button>
@@ -21,7 +21,7 @@ export default {
   data () {
     return {
       nameLogin: '',
-      score: 'A',
+      userScore: '',
       userKey: '',
       errorMsg: '',
       isLogin: false,
@@ -34,7 +34,7 @@ export default {
       self.userKey = firebaseApp.database().ref().child('currentuser').push().key
       var userData = {
         name: self.nameLogin,
-        score: self.score
+        userScore: 5
       }
       var updates = {}
       updates['currentuser/' + self.userKey] = userData
@@ -50,7 +50,7 @@ export default {
     },
     testScore: function () {
       var self = this
-      firebaseApp.database().ref('currentuser/' + self.userKey + '/' + 'score').set(self.score + 'A')
+      firebaseApp.database().ref('currentuser/' + self.userKey + '/' + 'userScore').set(self.userScore[self.userKey].userScore + 5)
     }
   },
   created: function () {
@@ -60,7 +60,8 @@ export default {
       source: firebaseApp.database().ref().child('currentuser')
     },
     userScore: {
-      source: firebaseApp.database().ref().child('currentuser/' + this.userKey + '/' + 'score')
+      source: firebaseApp.database().ref().child('currentuser'),
+      asObject: true
     }
   }
 }
