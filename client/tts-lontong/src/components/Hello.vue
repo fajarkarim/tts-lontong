@@ -3,12 +3,15 @@
     <table>
       <tr v-for="i in 5">
         <td v-for="j in 5">
-          <input v-if="crossword[i-1][j-1] == ' '" type="text" name="" :value="crossword[i-1][j-1]" disabled>
-          <input v-else type="text" name="" v-model="crossword[i-1][j-1]">
+          <input v-if="crossword[i-1][j-1] == ' '" type="text" name="" :value="crossword[i-1][j-1]" maxlength="1" size="4" disabled>
+          <input v-else type="text" name="" maxlength="1" size="10" v-model="crossword[i-1][j-1]">
         </td>
       </tr>
     </table>
     <button type="button" name="button" @click="checkAll">Anda Yakin ?</button>
+    <!-- <img src="../assets/background.jpg" alt="" width="100%"></img> -->
+    <!-- <img src="./assets/logo.png"> -->
+
   </div>
 </template>
 
@@ -116,6 +119,19 @@ export default {
 <style scoped>
 input {
   text-align: center;
-  width: 25px;
+  width: 50px;
+  height: 50px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+input[disabled] {
+  background-color: black;
+}
+
+.hello {
+  padding: 100px;
+  background-image: url('http://jurnalapps.co.id/assets/img/content/1491636977_TTS-Lontong.jpg');
+  height: 100%;
 }
 </style>
