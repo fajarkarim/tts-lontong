@@ -14,6 +14,7 @@
           <div class="col-md-4 col-md-offset-3">
             <div id="question">
               <h3> {{ currentQuestion }}</h3>
+              <button type="button" name="button" @click="nextQuestion">Lanjut!</button>
             </div>
             <div id="choice">
               <h1>Anda yakin ???</h1>
@@ -33,9 +34,12 @@ export default {
     return {
       msg: 'Welcome to Your Vue.js App',
       halo: 'coba',
-      currentQuestion: 'sss',
+      currentQuestion: '',
       listQuestions: [
-        `Badan Usaha Milik Negara disingkat...`
+        'di ?...',
+        'Lapar ?...',
+        '... Kaskus',
+        '.... Goreng'
       ],
       correctHAnswer: '',
       correctVAnswer: '',
@@ -53,6 +57,9 @@ export default {
         [' ', 'N', 'A', '', '']
       ]
     }
+  },
+  created () {
+    this.getQuestion()
   },
   methods: {
     updateBoard: function (i, j, val) {
@@ -125,6 +132,13 @@ export default {
         result.word = word
         return result
       }
+    },
+    getQuestion: function () {
+      this.currentQuestion = this.listQuestions[0]
+    },
+    nextQuestion: function () {
+      this.listQuestions.shift()
+      this.currentQuestion = this.listQuestions[0]
     }
   }
 }
